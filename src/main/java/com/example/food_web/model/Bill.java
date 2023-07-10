@@ -12,8 +12,8 @@ public class Bill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "integer default 0")
-    private Long quantity;
+//    @Column(columnDefinition = "integer default 0")
+//    private Long quantity;
 
     @Column(columnDefinition = "boolean default false")
     private Boolean status;
@@ -21,10 +21,11 @@ public class Bill {
     @ManyToOne
     private User user;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Food> food;
 
-
+    @Transient
+    private Double total;
 
 
 }

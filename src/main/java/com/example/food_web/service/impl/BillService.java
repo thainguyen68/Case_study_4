@@ -32,4 +32,22 @@ public class BillService implements IBillService {
     public void delete(Long aLong) {
        iBillRepository.deleteById(aLong);
     }
+
+
+    @Override
+    public List<Bill> findAllBillByFoodId(Long id) {
+        return iBillRepository.findAllBillByFood_id(id);
+    }
+
+    @Override
+    public void deleteBillFood(Long id) {
+        iBillRepository.deleteBill_food(id);
+    }
+
+    @Override
+    public Optional<Bill> findBillByUserId(Long userId) {
+        return iBillRepository.findBillByUserId(userId);
+    }
+
+
 }

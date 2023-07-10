@@ -12,6 +12,9 @@ public class Food {
     private Long id;
     private String name;
 
+    @Column(columnDefinition = "integer default 0")
+    private Integer quantity;
+
     private String imagePath;
     @Column(columnDefinition = "integer default 0")
     private Double price;
@@ -21,6 +24,10 @@ public class Food {
 
     @ManyToOne
     private Category category;
+
+    @Transient
+    private Integer quantityBuy;
+
 
 
 }

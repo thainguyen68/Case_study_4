@@ -6,4 +6,9 @@ import org.springframework.data.domain.Pageable;
 
 public interface IFoodService extends IGenerateService<Food, Long>{
     Page<Food> findAllPage(Pageable pageable);
+
+    Page<Food> findProductByNameAbout(String name, Pageable pageable);
+
+    Page<Food> filter(Long min, Long max, String name, Pageable pageable);
+
 }

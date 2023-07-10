@@ -63,12 +63,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/api/auth/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/foods/**", "/api/categories/**","/api/bills/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/foods/**", "/api/categories/**","/api/bills/**").hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/foods/**", "/api/categories/**").hasAnyRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/api/foods/**", "/api/categories/**").hasAnyRole("ADMIN")
                 .antMatchers(HttpMethod.PUT, "/api/foods/**", "/api/categories/**").hasAnyRole("ADMIN")
 
-                .antMatchers(HttpMethod.PUT, "/api/bills/**").hasAnyRole("USER")
-                .antMatchers(HttpMethod.DELETE, "/api/bills/**").permitAll()
+                .antMatchers(HttpMethod.PUT, "/api/bills/**").hasAnyRole("ADMIN", "USER")
+                .antMatchers(HttpMethod.POST, "/api/bills/**").hasAnyRole("ADMIN", "USER")
+                .antMatchers(HttpMethod.DELETE, "/api/bills/**").hasAnyRole("ADMIN", "USER")
                 .anyRequest().authenticated()
                 .and().csrf().disable();
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)

@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -28,7 +29,7 @@ public class FoodController {
     private String upload;
 
     @GetMapping
-    public ResponseEntity<Page<Food>> findAllFood(@PageableDefault(size = 6)
+    public ResponseEntity<Page<Food>> findAllFood(@PageableDefault(size = 10)
                                                Pageable pageable) {
         return new ResponseEntity<>(foodService.findAllPage(pageable), HttpStatus.OK);
     }
@@ -83,6 +84,7 @@ public class FoodController {
         Optional<Food> foodOptional = foodService.findOne(id);
         if (foodOptional.isPresent()) {
             foodService.delete(id);
+
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
         }
         return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
@@ -92,4 +94,31 @@ public class FoodController {
     public ResponseEntity<Optional<Food>> findOneFood(@PathVariable Long id) {
         return new ResponseEntity<>(foodService.findOne(id), HttpStatus.OK);
     }
+
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<Food>> findProductByNameAbout(@RequestParam("search") String name,
+                                                            @PageableDefault(size = 10) Pageable pageable){
+        Page<Food> foodIterable = foodService.findProductByNameAbout(name, pageable);
+        if (foodIterable.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(foodIterable, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<Page<Food>> filter(@RequestParam(required = false, defaultValue = "0") Long min,
+                                              @RequestParam(required = false, defaultValue = "999999999") Long max,
+                                              @RequestParam(required = false, defaultValue = "") String name,
+                                              @PageableDefault(size = 10) Pageable pageable) {
+        Page<Food> foodIterable = foodService.filter(min, max, name, pageable);
+        if (foodIterable.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(foodIterable, HttpStatus.OK);
+        }
+    }
+
+
 }
