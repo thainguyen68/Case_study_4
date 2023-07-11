@@ -25,9 +25,8 @@ public class Food {
     @ManyToOne
     private Category category;
 
-    @Transient
-    private Integer quantityBuy;
 
-
+//    @Column(columnDefinition = "integer default 0")
+//    private Integer quantityBuy;
 
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -34,5 +35,10 @@ public class UserService implements UserDetailsService {
             }
         }
         return null;
+    }
+
+
+    public Optional<User> findOneUser(Long id){
+        return iUserRepository.findById(id);
     }
 }

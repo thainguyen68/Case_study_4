@@ -12,8 +12,6 @@ public class Bill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @Column(columnDefinition = "integer default 0")
-//    private Long quantity;
 
     @Column(columnDefinition = "boolean default false")
     private Boolean status;

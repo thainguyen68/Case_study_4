@@ -11,4 +11,5 @@ public interface IFoodService extends IGenerateService<Food, Long>{
 
     Page<Food> filter(Long min, Long max, String name, Pageable pageable);
 
+
 }

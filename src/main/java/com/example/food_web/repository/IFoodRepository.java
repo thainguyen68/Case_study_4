@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 
 @Repository
 public interface IFoodRepository extends JpaRepository<Food, Long> {
@@ -19,4 +21,5 @@ public interface IFoodRepository extends JpaRepository<Food, Long> {
                        @Param("max") Long maxPrice,
                        @Param("name") String name,
                        Pageable pageable);
+
 }

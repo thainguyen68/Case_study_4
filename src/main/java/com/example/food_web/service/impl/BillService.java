@@ -45,8 +45,13 @@ public class BillService implements IBillService {
     }
 
     @Override
-    public Optional<Bill> findBillByUserId(Long userId) {
+    public List<Bill> findBillByUserId(Long userId) {
         return iBillRepository.findBillByUserId(userId);
+    }
+
+    @Override
+    public Integer totalQuantity(Long id) {
+       return iBillRepository.totalQuantity(id);
     }
 
 
