@@ -49,10 +49,10 @@ public class BillService implements IBillService {
         return iBillRepository.findBillByUserId(userId);
     }
 
-    @Override
-    public Integer totalQuantity(Long id) {
-       return iBillRepository.totalQuantity(id);
-    }
+//    @Override
+//    public Integer totalQuantity(Long id) {
+//       return iBillRepository.totalQuantity(id);
+//    }
 
 
 }

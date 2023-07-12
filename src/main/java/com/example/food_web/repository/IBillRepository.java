@@ -19,9 +19,10 @@ public interface IBillRepository extends JpaRepository<Bill, Long> {
 
 //    @Query(value = "select * from bill where user_id = :id", nativeQuery = true)
 //    Optional<Bill> findBillByUserId(@Param("id") Long userId);
-    @Query(value = "select * from bill where user_id = :id", nativeQuery = true)
+    @Query(value = "select * from bill where user_id = :id and status = 0", nativeQuery = true)
     List<Bill> findBillByUserId(@Param("id") Long userId);
 
-    @Query(value = "select count(food_id) from bill_food where bill_id = :id", nativeQuery = true)
-    Integer totalQuantity(@Param("id") Long id);
+//    @Query(value = "select count(food_id) from bill_food where bill_id = :id", nativeQuery = true)
+//    Integer totalQuantity(@Param("id") Long id);
+
 }

@@ -22,7 +22,7 @@ public class Bill {
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Food> food;
 
-    @Transient
+
     private Double total;
 
 

@@ -48,56 +48,38 @@ public class BillController {
     }
 
 
-//    @PostMapping
-//    public ResponseEntity<?> createBill(@RequestPart Bill bill,
-//                                        @RequestPart("food1") Food food) {
-//        Optional<Bill> billsByUserId = billService.findBillByUserId(bill.getUser().getId());
-//        List<Food> foodList;
-//        if (billsByUserId.isPresent()){
-//            List<Food> foodListCheck = billsByUserId.get().getFood();
-//            foodList = foodListCheck;
-//            bill.setId(billsByUserId.get().getId());
-//        } else {
-//            foodList = new ArrayList<>();
-//        }
-//        Optional<Food> foodOptional = foodService.findOne(food.getId().longValue());
-//        Food food1 = foodOptional.get();
-//        foodList.add(food1);
-//
-//
-//        bill.setStatus(false);
-//        bill.setFood(foodList);
-//        billService.save(bill);
-//
-//        return new ResponseEntity<>(HttpStatus.ACCEPTED);
-//    }
-
 
 //    @PostMapping
 //    public ResponseEntity<?> createBill(
-//                                        @RequestPart User user,
-//                                        @RequestPart("food1") Food food) {
+//            @RequestPart User user,
+//            @RequestPart("food1") Food food) {
 //
-//        Optional<Bill> billsByUserId = billService.findBillByUserId(user.getId());
-//        if (billsByUserId.isPresent()) {
-//            // viet lại thanh truy ván List, duyệt mảng bill kiểm tra xem food1 kia đã tồn tại chưa
+//        List<Bill> billsByUserId = billService.findBillByUserId(user.getId());
+//        if (!billsByUserId.isEmpty()) {
+//            List<Food> foodList;
+//            for (Bill bill : billsByUserId) {
+//                foodList = bill.getFood();
+//                for (Food f : foodList) {
+//                    if (f.getId().equals(food.getId())) {
+//                        Optional<Bill_food> bill_food = billFoodService.findByBillIdAndFoodId(bill.getId(), food.getId());
+//                        if (bill_food.isPresent()) {
+//                            bill_food.get().setQuantity(bill_food.get().getQuantity() + 1);
+//                            billFoodService.save(bill_food.get());
+//                        }
+//                    } else {
+//                        Bill newBill = new Bill();
+//                        newBill.setStatus(false);
+//                        newBill.setUser(user);
+//                        newBill.setTotal(0D);
+//                        billService.save(newBill);
 //
-//            Optional<Bill_food> bill_food = billFoodService.findByBillIdAndFoodId(billsByUserId.get().getId(), food.getId());
-//            if (bill_food.isPresent()) {
-//                bill_food.get().setQuantity(bill_food.get().getQuantity() + 1);
-//                billFoodService.save(bill_food.get());
-//            } else {
-//                Bill newBill = new Bill();
-//                newBill.setStatus(false);
-//                newBill.setUser(user);
-//                newBill.setTotal(0D);
-//                billService.save(newBill);
-//
-//                Bill_food b_food = new Bill_food();
-//                b_food.setBill(newBill);
-//                b_food.setFood(food);
-//                b_food.setQuantity(1);
-//                billFoodService.save(b_food);
+//                        Bill_food b_food = new Bill_food();
+//                        b_food.setBill(newBill);
+//                        b_food.setFood(food);
+//                        b_food.setQuantity(1);
+//                        billFoodService.save(b_food);
+//                    }
+//                }
 //            }
 //        } else {
 //            Bill newBill = new Bill();
@@ -116,39 +98,43 @@ public class BillController {
 //    }
 
 
+
     @PostMapping
     public ResponseEntity<?> createBill(
             @RequestPart User user,
             @RequestPart("food1") Food food) {
-
+        Optional<Food> f = foodService.findOne(food.getId());
+        Double total = 0D;
         List<Bill> billsByUserId = billService.findBillByUserId(user.getId());
         if (!billsByUserId.isEmpty()) {
-            List<Food> foodList;
             for (Bill bill : billsByUserId) {
-                foodList = bill.getFood();
-                for (Food f : foodList) {
-                    if (f.getId().equals(food.getId())) {
-                        Optional<Bill_food> bill_food = billFoodService.findByBillIdAndFoodId(bill.getId(), food.getId());
-                        if (bill_food.isPresent()) {
-                            bill_food.get().setQuantity(bill_food.get().getQuantity() + 1);
-                            billFoodService.save(bill_food.get());
-                        }
-                    } else {
-                        Bill newBill = new Bill();
-                        newBill.setStatus(false);
-                        newBill.setUser(user);
-                        newBill.setTotal(0D);
-                        billService.save(newBill);
-
-                        Bill_food b_food = new Bill_food();
-                        b_food.setBill(newBill);
-                        b_food.setFood(food);
-                        b_food.setQuantity(1);
-                        billFoodService.save(b_food);
-                    }
+                Optional<Bill_food> bill_food = billFoodService.findByBillIdAndFoodId(bill.getId(), food.getId());
+                Optional<Food> foodOptional  = foodService.findOne(food.getId());
+                if (bill_food.isPresent()) {
+                    bill_food.get().setQuantity(bill_food.get().getQuantity() + 1);
+                    f.get().setQuantity(f.get().getQuantity()-1);
+                    total = bill_food.get().getQuantity() * foodOptional.get().getPrice();
+                    total += bill.getTotal() == null ? 0 : bill.getTotal();
+                    bill.setTotal(total);
+                    billService.save(bill);
+                    foodService.save(f.get());
+                    billFoodService.save(bill_food.get());
+                }
+                else{
+                    Bill_food b_food = new Bill_food();
+                    b_food.setBill(bill);
+                    b_food.setFood(food);
+                    b_food.setQuantity(1);
+                    f.get().setQuantity(f.get().getQuantity()-1);
+                    total = b_food.getQuantity() * foodOptional.get().getPrice();
+                    bill.setTotal(bill.getTotal() + total);
+                    billService.save(bill);
+                    foodService.save(f.get());
+                    billFoodService.save(b_food);
                 }
             }
-        } else {
+        }
+        else{
             Bill newBill = new Bill();
             newBill.setStatus(false);
             newBill.setUser(user);
@@ -163,6 +149,9 @@ public class BillController {
         }
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
+
+
+
 
 
 //    @PutMapping("/{id}")

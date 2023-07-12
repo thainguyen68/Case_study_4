@@ -13,5 +13,5 @@ public interface IBillService extends IGenerateService<Bill,Long>{
 
     List<Bill> findBillByUserId(Long userId);
 
-    Integer totalQuantity(Long id);
+//    Integer totalQuantity(Long id);
 }
