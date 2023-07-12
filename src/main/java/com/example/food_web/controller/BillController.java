@@ -113,6 +113,7 @@ public class BillController {
                 if (bill_food.isPresent()) {
                     bill_food.get().setQuantity(bill_food.get().getQuantity() + 1);
                     f.get().setQuantity(f.get().getQuantity()-1);
+
                     total = bill_food.get().getQuantity() * foodOptional.get().getPrice();
                     total += bill.getTotal() == null ? 0 : bill.getTotal();
                     bill.setTotal(total);
@@ -126,6 +127,8 @@ public class BillController {
                     b_food.setFood(food);
                     b_food.setQuantity(1);
                     f.get().setQuantity(f.get().getQuantity()-1);
+
+
                     total = b_food.getQuantity() * foodOptional.get().getPrice();
                     bill.setTotal(bill.getTotal() + total);
                     billService.save(bill);
@@ -138,13 +141,15 @@ public class BillController {
             Bill newBill = new Bill();
             newBill.setStatus(false);
             newBill.setUser(user);
-            newBill.setTotal(0D);
+
             billService.save(newBill);
 
             Bill_food b_food = new Bill_food();
             b_food.setBill(newBill);
             b_food.setFood(food);
             b_food.setQuantity(1);
+            newBill.setTotal(f.get().getPrice() * b_food.getQuantity());
+
             billFoodService.save(b_food);
         }
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
@@ -173,19 +178,19 @@ public class BillController {
         Optional<Bill> billOptional = billService.findOne(id);
         if (billOptional.isPresent()) {
             billService.delete(id);
+//            billFoodService.delete(id);
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-
-    @GetMapping("/pay")
-    public ResponseEntity<Optional<Bill>> payBill(@RequestPart Bill bill) {
-        Optional<Bill> billOptional = billService.findOne(bill.getId());
+    @GetMapping("/pay/{id}")
+    public ResponseEntity<Optional<Bill>> payBill(@PathVariable Long id) {
+        Optional<Bill> billOptional = billService.findOne(id);
         if (billOptional.isPresent()) {
-            bill.setStatus(true);
-            billService.save(bill);
+            billOptional.get().setStatus(true);
+            billService.save(billOptional.get());
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

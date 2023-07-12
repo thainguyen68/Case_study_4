@@ -14,6 +14,8 @@ public interface IBillRepository extends JpaRepository<Bill, Long> {
     @Query(value = "select * from bill_food join bill b on b.id = bill_food.bill_id where food_id = :id", nativeQuery = true)
     List<Bill> findAllBillByFood_id (@Param("id") Long id);
 
+
+
     @Query(value = "delete from bill_food where food_id = :idDelete", nativeQuery = true)
     void deleteBill_food(@Param("idDelete") Long id);
 
@@ -25,4 +27,6 @@ public interface IBillRepository extends JpaRepository<Bill, Long> {
 //    @Query(value = "select count(food_id) from bill_food where bill_id = :id", nativeQuery = true)
 //    Integer totalQuantity(@Param("id") Long id);
 
+//    @Query(value = "select * from bill_detail", nativeQuery = true)
+//    List<Bill> findAllBillFood();
 }

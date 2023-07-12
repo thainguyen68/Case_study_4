@@ -26,7 +26,7 @@ public class Food {
     private Category category;
 
 
-//    @Column(columnDefinition = "integer default 0")
-//    private Integer quantityBuy;
+    @Column(columnDefinition = "integer default 0")
+    private Integer quantityBuy;
 
 }
