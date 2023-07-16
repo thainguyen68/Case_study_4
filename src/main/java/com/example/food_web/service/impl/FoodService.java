@@ -62,4 +62,14 @@ public class FoodService implements IFoodService {
         return iFoodRepository.filter(min, max,"%" + name + "%", pageable);
     }
 
+    @Override
+    public Page<Food> sortByPriceASC(Pageable pageable) {
+        return iFoodRepository.findAllByOrderByPriceAsc(pageable);
+    }
+
+    @Override
+    public Page<Food> sortByPriceDSC(Pageable pageable) {
+        return iFoodRepository.findAllByOrderByPriceDesc(pageable);
+    }
+
 }

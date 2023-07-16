@@ -121,4 +121,24 @@ public class FoodController {
     }
 
 
+    @GetMapping("/sort_price_asc")
+    public ResponseEntity<Page<Food>> listFoodByPriceAsc ( @PageableDefault(size = 10) Pageable pageable){
+        Page<Food> foodList = foodService.sortByPriceASC(pageable);
+        if (foodList.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(foodList,HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/sort_price_dsc")
+    public ResponseEntity<Page<Food>> listFoodByPriceDsc( @PageableDefault(size = 10) Pageable pageable){
+        Page<Food> foods =  foodService.sortByPriceDSC(pageable);
+        if (foods.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(foods, HttpStatus.OK);
+        }
+    }
+
 }

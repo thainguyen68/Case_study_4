@@ -22,4 +22,6 @@ public interface IFoodRepository extends JpaRepository<Food, Long> {
                        @Param("name") String name,
                        Pageable pageable);
 
+    Page<Food> findAllByOrderByPriceAsc(Pageable pageable);
+    Page<Food> findAllByOrderByPriceDesc(Pageable pageable);
 }
